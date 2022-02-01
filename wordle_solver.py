@@ -1,11 +1,40 @@
 import random
+from collections import Counter
 
 
-def random_word(dictionary):
+def random_word(dictionary: list):
+    """
+    Pick a random word from a dictionary
+    :param dictionary: a list of wirds
+    :return: one of the words
+    """
     return dictionary[random.randrange(0, len(dictionary))]
 
 
+def all_letters_are_distinct(word: str):
+    return len(Counter(word).values()) == len(word)
+
+
+def initial_guesses(dictionary):
+    """
+    Pick words that have all distinct letters
+    :param dictionary:
+    :return:
+    """
+    return [word for word in dictionary if all_letters_are_distinct(word)]
+
+
 def score_guess(secret_word: str, guess: str) -> list:
+    """
+    Score a guess against the actual word
+    The score codes mean
+    -1: Letter is not in the word
+    0: The letter is in the word but at a different place
+    1: The letter is at the right place
+    :param secret_word: The secret word
+    :param guess: The guess
+    :return: A list of score values - one for each letter
+    """
     score = [-1 for _ in range(0, len(guess))]
     for i in range(0, len(guess)):
         if secret_word[i] == guess[i]:
@@ -37,7 +66,10 @@ def is_solved(score: list) -> bool:
 def solve(secret_word, five_letter_words):
     words_remaining = five_letter_words
     for i in range(6):
-        guess = random_word(words_remaining)
+        if i == 0:
+            guess = random_word(initial_guesses(words_remaining))
+        else:
+            guess = random_word(words_remaining)
         print('guess: ' + guess)
 
         score = score_guess(secret_word, guess)
@@ -53,16 +85,8 @@ def read_dictionary(filename='words_alpha.txt', word_length=5):
     file = open(filename, 'r')
     words = file.readlines()
     specific_words = [w.strip().upper() for w in words if len(w.strip()) == word_length]
-    print(len(specific_words))
     return specific_words
 
-
-if __name__ == '__main__':
-    five_letter_words = read_dictionary()
-    secret_word = random_word(five_letter_words)
-    print("secret word: " + secret_word)
-    guess, iterations = solve(secret_word, five_letter_words)
-    print(f'Found the solution {guess} in {iterations} iterations')
 
 
 

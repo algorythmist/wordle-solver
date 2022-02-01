@@ -5,9 +5,13 @@ from wordle_solver import *
 
 class WordleTestCase(unittest.TestCase):
 
+    def test_all_letters_are_distinct(self):
+        self.assertTrue(all_letters_are_distinct('abcd'))
+        self.assertFalse(all_letters_are_distinct('abcdefa'))
+
     def test_solver(self):
         five_letter_words = read_dictionary()
-        for _ in range(0, 1000):
+        for _ in range(0, 10):
             secret_word = random_word(five_letter_words)
             print("secret word: " + secret_word)
             guess, iterations = solve(secret_word, five_letter_words)
