@@ -2,13 +2,93 @@ import random
 from collections import Counter
 
 
+class Scorer:
+
+    def __init__(self, secret: str):
+        self.secret = secret
+
+    def score(self, word: str):
+        return score_guess(self.secret, word)
+
+
+class WordleSolver:
+
+    def __init__(self, scorer: Scorer):
+        self.scorer = scorer
+
+    def guess_next_word(self, words_remaining, trial):
+        pass
+
+    def solve(self, dictionary):
+        guesses = []
+        words_remaining = set(dictionary)
+        for i in range(6):
+            guess = self.guess_next_word(words_remaining, i)
+            guesses.append(guess)
+            score = self.scorer.score(guess)
+            if is_solved(score):
+                break
+            words_remaining = filter_dictionary(words_remaining, score, guess)
+        return guesses
+
+
+class BruteForceSolver(WordleSolver):
+
+    def __init__(self, scorer: Scorer):
+        super(BruteForceSolver, self).__init__(scorer)
+
+    def guess_next_word(self, words_remaining, trial):
+        if trial == 0:
+            return random_word(initial_guesses(words_remaining))
+        return random_word(words_remaining)
+
+
+def evaluate_guess(guess, dictionary):
+    penalty = 0
+    for word in dictionary:
+        if word == guess:
+            continue
+        # TODO: resolve ties
+        scorer = Scorer(word)
+        score = scorer.score(guess)
+        new_dict = filter_dictionary(dictionary, score, guess)
+        penalty += len(new_dict)
+    return float(penalty) / len(dictionary)
+
+
+def find_best_word(dictionary, evaluate_fn):
+    min_penalty = 1000000
+    best_word = None
+    for word in dictionary:
+        penalty = evaluate_fn(word, dictionary)
+        if penalty < min_penalty:
+            min_penalty = penalty
+            best_word = word
+    return best_word
+
+
+class OneStepLookaheadSolver(WordleSolver):
+
+    def __init__(self, scorer: Scorer, evaluate_fn=evaluate_guess, threshold=200):
+        super(OneStepLookaheadSolver, self).__init__(scorer)
+        self.evaluate_fn = evaluate_fn
+        self.threshold = threshold
+
+    def guess_next_word(self, words_remaining, trial):
+        if trial == 0:
+            return random_word(initial_guesses(words_remaining))
+        if len(words_remaining) < self.threshold:
+            return find_best_word(words_remaining, self.evaluate_fn)
+        return random_word(words_remaining)
+
+
 def random_word(dictionary: list):
     """
     Pick a random word from a dictionary
     :param dictionary: a list of wirds
     :return: one of the words
     """
-    return dictionary[random.randrange(0, len(dictionary))]
+    return random.sample(dictionary, 1)[0]
 
 
 def all_letters_are_distinct(word: str) -> bool:
@@ -29,7 +109,7 @@ def initial_guesses(dictionary):
     :param dictionary:
     :return:
     """
-    return [word for word in dictionary if all_letters_are_distinct(word) and has_vowels(word, 3)]
+    return {word for word in dictionary if all_letters_are_distinct(word) and has_vowels(word, 3)}
 
 
 def score_guess(secret_word: str, guess: str) -> list:
@@ -64,31 +144,11 @@ def filter_word(word: str, score: list, guess: str) -> bool:
 
 
 def filter_dictionary(dictionary: list, score: list, guess: str) -> bool:
-    return [w for w in dictionary if filter_word(w, score, guess)]
+    return {w for w in dictionary if filter_word(w, score, guess)}
 
 
 def is_solved(score: list) -> bool:
     return sum(score) == len(score)
-
-
-def solve(secret_word, five_letter_words):
-    guesses = []
-    words_remaining = five_letter_words
-    for i in range(6):
-        if i == 0:
-            guess = random_word(initial_guesses(words_remaining))
-        else:
-            guess = random_word(words_remaining)
-        print('Guess: '+guess)
-        guesses.append(guess)
-
-        score = score_guess(secret_word, guess)
-        print(f'Score = {score}')
-        if is_solved(score):
-            print("FOUND IT!")
-            break
-        words_remaining = filter_dictionary(words_remaining, score, guess)
-    return guesses
 
 
 def read_dictionary(filename='words_alpha.txt', word_length=5):
@@ -96,7 +156,5 @@ def read_dictionary(filename='words_alpha.txt', word_length=5):
         words = file.readlines()
     specific_words = [w.strip().upper() for w in words if len(w.strip()) == word_length]
     return specific_words
-
-
 
 
