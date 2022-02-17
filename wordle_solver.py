@@ -39,7 +39,7 @@ class BruteForceSolver(WordleSolver):
 
     def guess_next_word(self, words_remaining, trial):
         if trial == 0:
-            return random_word(initial_guesses(words_remaining))
+            return 'CRANE' #random_word(initial_guesses(words_remaining))
         return random_word(words_remaining)
 
 
@@ -88,6 +88,7 @@ def random_word(dictionary: list):
     :param dictionary: a list of wirds
     :return: one of the words
     """
+    # TODO: Sampling from a set is deprecated. Find new way
     return random.sample(dictionary, 1)[0]
 
 
@@ -151,7 +152,7 @@ def is_solved(score: list) -> bool:
     return sum(score) == len(score)
 
 
-def read_dictionary(filename='words_alpha.txt', word_length=5):
+def read_dictionary(filename='wordle_dict.txt', word_length=5):
     with open(filename, 'r') as file:
         words = file.readlines()
     specific_words = [w.strip().upper() for w in words if len(w.strip()) == word_length]

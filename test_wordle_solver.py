@@ -7,7 +7,7 @@ class WordleTestCase(unittest.TestCase):
 
     def test_dictionary(self):
         dictionary = read_dictionary()
-        self.assertEqual(15918, len(dictionary))
+        self.assertEqual(2315, len(dictionary))
 
     def test_all_letters_are_distinct(self):
         self.assertTrue(all_letters_are_distinct('abcd'))
@@ -21,7 +21,7 @@ class WordleTestCase(unittest.TestCase):
     def test_initial_guesses(self):
         five_letter_words = read_dictionary()
         guesses = initial_guesses(five_letter_words)
-        self.assertEqual(1510, len(guesses))
+        self.assertEqual(192, len(guesses))
         for guess in guesses:
             self.assertTrue(all_letters_are_distinct(guess))
 
@@ -62,18 +62,16 @@ class WordleTestCase(unittest.TestCase):
         self.assertEqual(secret_word, guess)
 
 
-
     def test_solver_accuracy(self):
         five_letter_words = read_dictionary()
-        trials = 50
+        trials = 1000
         successes = 0
         total_score = 0
         for i in range(trials):
             secret_word = random_word(five_letter_words)
             scorer = Scorer(secret_word)
             # TODO: pass solver as param
-            guesses = OneStepLookaheadSolver(scorer).solve(five_letter_words)
-                #BruteForceSolver(scorer).solve(five_letter_words)
+            guesses = BruteForceSolver(scorer).solve(five_letter_words)
 
             guess = guesses[-1]
             if guess == secret_word:
