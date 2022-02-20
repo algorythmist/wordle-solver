@@ -1,7 +1,7 @@
 import random
 from collections import Counter
 from dictionary import filter_dictionary
-from wordle_scorer import  Scorer
+from wordle_scorer import Scorer
 
 
 class WordleSolver:
@@ -68,8 +68,4 @@ def initial_guesses(dictionary):
     return {word for word in dictionary if all_letters_are_distinct(word) and has_vowels(word, 3)}
 
 
-def read_dictionary(filename='wordle_dict.txt', word_length=5):
-    with open(filename, 'r') as file:
-        words = file.readlines()
-    specific_words = [w.strip().upper() for w in words if len(w.strip()) == word_length]
-    return specific_words
+

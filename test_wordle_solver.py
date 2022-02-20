@@ -1,13 +1,9 @@
 import unittest
-
 from wordle_solver import *
+from dictionary import read_dictionary
 
 
 class WordleTestCase(unittest.TestCase):
-
-    def test_dictionary(self):
-        dictionary = read_dictionary()
-        self.assertEqual(2315, len(dictionary))
 
     def test_all_letters_are_distinct(self):
         self.assertTrue(all_letters_are_distinct('abcd'))
@@ -24,11 +20,6 @@ class WordleTestCase(unittest.TestCase):
         self.assertEqual(192, len(guesses))
         for guess in guesses:
             self.assertTrue(all_letters_are_distinct(guess))
-
-    def test_filter_dictionary(self):
-        five_letter_words = read_dictionary()
-        new_dict = filter_dictionary(five_letter_words, [('W',-1), ('O',-1), ('R',-1), ('D',-1), ('Y',-1)])
-        print(len(new_dict))
 
     def test_brute_force_solver(self):
         five_letter_words = read_dictionary()
@@ -61,7 +52,9 @@ class WordleTestCase(unittest.TestCase):
         success_rate = float(successes) / trials
         average_score = float(total_score) / successes
         print(f'\nSuccess rate = {success_rate:.2}')
+        self.assertTrue(success_rate >= 0.98)
         print(f'Average Score = {average_score}')
+        self.assertTrue(average_score < 4)
 
     def test_solver_repeated_letter(self):
         five_letter_words = read_dictionary()

@@ -1,5 +1,6 @@
 import unittest
 
+from dictionary import read_dictionary
 from wordle_solver import *
 from heuristics import OneStepLookaheadSolver, evaluate_guess
 
@@ -26,16 +27,16 @@ class HeuristicsTestCase(unittest.TestCase):
         print(f'\nFound the solution {guess} in {iterations} iterations')
         self.assertEqual(secret_word, guess)
 
-    def test_solver_repeated_letter(self):
-        five_letter_words = read_dictionary('words_alpha.txt')
-        secret_word = 'BULLS'
-        scorer = Scorer(secret_word)
-        guesses = BruteForceSolver(scorer).solve(five_letter_words)
-        guess = guesses[-1]
-        self.assertEqual(secret_word, guess)
-        iterations = len(guesses)
-        print(f'Found the solution {guess} in {iterations} iterations')
-        self.assertEqual(secret_word, guess)
+    # def test_solver_repeated_letter(self):
+    #     five_letter_words = read_dictionary('words_alpha.txt')
+    #     secret_word = 'BULLS'
+    #     scorer = Scorer(secret_word)
+    #     guesses = BruteForceSolver(scorer).solve(five_letter_words)
+    #     guess = guesses[-1]
+    #     self.assertEqual(secret_word, guess)
+    #     iterations = len(guesses)
+    #     print(f'Found the solution {guess} in {iterations} iterations')
+    #     self.assertEqual(secret_word, guess)
 
 
     # def test_solver_accuracy(self):

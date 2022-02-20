@@ -1,21 +1,25 @@
 import unittest
 
-from wordle_solver import read_dictionary
 from dictionary import *
 
 
 class DictionaryTestCase(unittest.TestCase):
 
+    def test_read_dictionary(self):
+        dictionary = read_dictionary()
+        self.assertEqual(2315, len(dictionary))
+
+    def test_filter_dictionary(self):
+        five_letter_words = read_dictionary()
+        new_dict = filter_dictionary(five_letter_words, [('W', -1), ('O', -1), ('R', -1), ('D', -1), ('Y', -1)])
+        self.assertEqual(644, len(new_dict))
+
+
     def test_set(self):
-        words = ['ABATE', 'DISCO', 'FALSE', 'NEEDY', 'WORDY']
+        words = ['ABATE', 'DISCO', 'FALSE', 'NEEDY', 'SKATE', 'WORDY']
         dictionary = SetDictionary(words)
-        print(dictionary.words)
+        filtered_dictionary = dictionary.filter([('A', 0), ('N', -1), ('I', -1), ('M', -1), ('E', 1)])
+        self.assertEqual(2, len(filtered_dictionary))
+        self.assertEqual({'SKATE', 'FALSE'}, filtered_dictionary.words)
 
-    def test_map(self):
-        words = ['ABATE', 'DISCO', 'FALSE', 'NEEDY', 'WORDY']
-        dictionary = MapDictionary(words)
-        #print(dictionary.words)
-
-        final = dictionary.filter({'A': 0, 'B': 1, 'E': 0, 'D': -1, 'Y': -1})
-        print(final.words)
 
