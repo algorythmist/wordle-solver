@@ -25,17 +25,10 @@ class WordleTestCase(unittest.TestCase):
         for guess in guesses:
             self.assertTrue(all_letters_are_distinct(guess))
 
-
-    def test_evaluate_guess(self):
-        dictionary = ['AXEL', 'ALEX', 'LEAF', 'FUND']
-        penalties = [0.75, 0.75, 1.25, 1.25]
-        for i, guess in enumerate(dictionary):
-            penalty = evaluate_guess(guess, dictionary)
-            self.assertEqual(penalties[i], penalty)
-
-        best_word = find_best_word(dictionary, evaluate_guess)
-        self.assertEqual('AXEL', best_word)
-
+    def test_filter_dictionary(self):
+        five_letter_words = read_dictionary()
+        new_dict = filter_dictionary(five_letter_words, [('W',-1), ('O',-1), ('R',-1), ('D',-1), ('Y',-1)])
+        print(len(new_dict))
 
     def test_brute_force_solver(self):
         five_letter_words = read_dictionary()
@@ -48,19 +41,6 @@ class WordleTestCase(unittest.TestCase):
         iterations = len(guesses)
         print(f'\nFound the solution {guess} in {iterations} iterations')
         self.assertEqual(secret_word, guess)
-
-    def test_lookahead_solver(self):
-        five_letter_words = read_dictionary()
-        secret_word = 'TEPID'
-        scorer = Scorer(secret_word)
-        solver = OneStepLookaheadSolver(scorer)
-        guesses = solver.solve(five_letter_words)
-        guess = guesses[-1]
-        self.assertEqual('TEPID', guess)
-        iterations = len(guesses)
-        print(f'\nFound the solution {guess} in {iterations} iterations')
-        self.assertEqual(secret_word, guess)
-
 
     def test_solver_accuracy(self):
         five_letter_words = read_dictionary()
@@ -78,21 +58,18 @@ class WordleTestCase(unittest.TestCase):
                 successes += 1
                 total_score += len(guesses)
 
-        success_rate = float(successes)/trials
-        average_score = float(total_score)/successes
+        success_rate = float(successes) / trials
+        average_score = float(total_score) / successes
         print(f'\nSuccess rate = {success_rate:.2}')
         print(f'Average Score = {average_score}')
 
-
-    # def test_solver_repeated_letter(self):
-    #     five_letter_words = read_dictionary()
-    #     secret_word = 'BULLS'
-    #     scorer = Scorer(secret_word)
-    #     guesses = BruteForceSolver(scorer).solve(five_letter_words)
-    #     guess = guesses[-1]
-    #     self.assertEqual('BULLS', guess)
-    #     iterations = len(guesses)
-    #     print(f'Found the solution {guess} in {iterations} iterations')
-    #     self.assertEqual(secret_word, guess)
-
-
+    def test_solver_repeated_letter(self):
+        five_letter_words = read_dictionary()
+        secret_word = 'GASSY'
+        scorer = Scorer(secret_word)
+        guesses = BruteForceSolver(scorer).solve(five_letter_words)
+        guess = guesses[-1]
+        self.assertEqual(secret_word, guess)
+        iterations = len(guesses)
+        print(f'Found the solution {guess} in {iterations} iterations')
+        self.assertEqual(secret_word, guess)
