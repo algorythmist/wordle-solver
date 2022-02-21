@@ -28,12 +28,13 @@ class WordleSolver:
 
 class BruteForceSolver(WordleSolver):
 
-    def __init__(self, scorer: Scorer):
+    def __init__(self, scorer: Scorer, opener='SLATE'):
         super(BruteForceSolver, self).__init__(scorer)
+        self.opener = opener
 
     def guess_next_word(self, words_remaining, trial):
         if trial == 0:
-            return 'CRANE' #TODO random_word(initial_guesses(words_remaining))
+            return self.opener
         return random_word(words_remaining)
 
 

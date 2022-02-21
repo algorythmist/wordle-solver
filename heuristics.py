@@ -47,7 +47,7 @@ class OneStepLookaheadSolver(WordleSolver):
 
     def guess_next_word(self, words_remaining, trial):
         if trial == 0:
-            return 'CRANE'
+            return 'SLATE'
         if len(words_remaining) < self.threshold:
             return find_best_word(words_remaining, self.evaluate_fn, self.max_sample_size)
         return random_word(words_remaining)
