@@ -1,6 +1,6 @@
 import unittest
 
-from wordle_scorer import Scorer
+from wordle.wordle_scorer import Scorer
 
 
 class ScorerTestCase(unittest.TestCase):

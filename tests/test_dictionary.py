@@ -1,6 +1,6 @@
 import unittest
 
-from dictionary import *
+from wordle.dictionary import *
 
 
 class DictionaryTestCase(unittest.TestCase):

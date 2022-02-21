@@ -1,6 +1,6 @@
 import unittest
-from wordle_solver import *
-from dictionary import read_dictionary
+from wordle.wordle_solver import *
+from wordle.dictionary import read_dictionary
 
 
 class WordleTestCase(unittest.TestCase):
@@ -34,7 +34,7 @@ class WordleTestCase(unittest.TestCase):
         self.assertEqual(secret_word, guess)
 
     def test_solver_accuracy(self):
-        success_rate, average_score = evaluate_solver('wordle_dict.txt', 1000,
+        success_rate, average_score = evaluate_solver('../data/wordle_dict.txt', 1000,
                                                       lambda scorer: BruteForceSolver(scorer))
         print(f'\nSuccess rate = {success_rate:.2}')
         self.assertTrue(success_rate >= 0.98)
@@ -42,7 +42,7 @@ class WordleTestCase(unittest.TestCase):
         self.assertTrue(average_score < 4)
 
     def test_solver_accuracy_large_dict(self):
-        success_rate, average_score = evaluate_solver('words_alpha.txt', 1000,
+        success_rate, average_score = evaluate_solver('../data/words_alpha.txt', 1000,
                                                       lambda scorer: BruteForceSolver(scorer))
         print(f'\nSuccess rate = {success_rate:.2}')
         print(f'Average Score = {average_score}')

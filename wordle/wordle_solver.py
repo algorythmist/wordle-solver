@@ -1,8 +1,7 @@
 import random
 from collections import Counter
-from dictionary import read_dictionary, filter_dictionary
-from wordle_scorer import Scorer
-
+from wordle.dictionary import read_dictionary, filter_dictionary
+from wordle.wordle_scorer import Scorer
 
 class WordleSolver:
 
@@ -41,11 +40,10 @@ class BruteForceSolver(WordleSolver):
 def random_word(dictionary):
     """
     Pick a random word from a dictionary
-    :param dictionary: a list of wirds
+    :param dictionary: a list of words
     :return: one of the words
     """
-    # TODO: Sampling from a set is deprecated. Find new way
-    return random.sample(dictionary, 1)[0]
+    return random.choice(tuple(dictionary))
 
 
 def all_letters_are_distinct(word: str) -> bool:

@@ -1,4 +1,4 @@
-from wordle_solver import WordleSolver, random_word, Scorer, filter_dictionary
+from wordle.wordle_solver import WordleSolver, random_word, Scorer, filter_dictionary
 import random
 
 def evaluate_guess(guess, current_dictionary):

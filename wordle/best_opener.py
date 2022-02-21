@@ -1,9 +1,9 @@
 import multiprocessing as mp
-from dictionary import read_dictionary
-from wordle_solver import evaluate_solver, BruteForceSolver
+from wordle.dictionary import read_dictionary
+from wordle.wordle_solver import evaluate_solver, BruteForceSolver
 
 def evaluate_opener(opener: str):
-    success_rate, average_score = evaluate_solver('wordle_dict.txt', 500,
+    success_rate, average_score = evaluate_solver('../data/wordle_dict.txt', 500,
                                                   lambda scorer: BruteForceSolver(scorer=scorer,
                                                                                   opener=opener))
     return opener, average_score, success_rate
@@ -23,7 +23,7 @@ def find_best_openers():
     results = sorted(results, key=lambda x: x[1])
     results = [f'{result[0]},{result[1]},{result[2]}\n' for result in results]
 
-    with open("best_openers.txt", "w") as f:
+    with open("../data/best_openers.txt", "w") as f:
         f.writelines(results)
 
 
