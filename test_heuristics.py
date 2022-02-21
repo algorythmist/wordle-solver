@@ -1,8 +1,7 @@
 import unittest
 
-from dictionary import read_dictionary
-from wordle_solver import *
 from heuristics import OneStepLookaheadSolver, evaluate_guess
+from wordle_solver import *
 
 
 class HeuristicsTestCase(unittest.TestCase):
@@ -27,6 +26,22 @@ class HeuristicsTestCase(unittest.TestCase):
         print(f'\nFound the solution {guess} in {iterations} iterations')
         self.assertEqual(secret_word, guess)
 
+    def no_test_solver_accuracy(self):
+        trials = 100
+        success_rate, average_score = evaluate_solver('wordle_dict.txt', trials,
+                                                      lambda scorer: OneStepLookaheadSolver(scorer))
+        print(f'\nSuccess rate = {success_rate:.2}')
+        print(f'Average Score = {average_score}')
+
+    def no_test_solver_accuracy_large_dict(self):
+        trials = 100
+        success_rate, average_score = evaluate_solver('words_alpha.txt', trials,
+                                                      lambda scorer: OneStepLookaheadSolver(scorer,
+                                                                                            threshold=300,
+                                                                                            max_sample_size=1000))
+        print(f'\nSuccess rate = {success_rate:.2}')
+        print(f'Average Score = {average_score}')
+
     # def test_solver_repeated_letter(self):
     #     five_letter_words = read_dictionary('words_alpha.txt')
     #     secret_word = 'BULLS'
@@ -37,25 +52,3 @@ class HeuristicsTestCase(unittest.TestCase):
     #     iterations = len(guesses)
     #     print(f'Found the solution {guess} in {iterations} iterations')
     #     self.assertEqual(secret_word, guess)
-
-
-    # def test_solver_accuracy(self):
-    #     five_letter_words = read_dictionary()
-    #     trials = 50
-    #     successes = 0
-    #     total_score = 0
-    #     for i in range(trials):
-    #         secret_word = random_word(five_letter_words)
-    #         scorer = Scorer(secret_word)
-    #         # TODO: pass solver as param
-    #         guesses = OneStepLookaheadSolver(scorer).solve(five_letter_words)
-    #
-    #         guess = guesses[-1]
-    #         if guess == secret_word:
-    #             successes += 1
-    #             total_score += len(guesses)
-    #
-    #     success_rate = float(successes) / trials
-    #     average_score = float(total_score) / successes
-    #     print(f'\nSuccess rate = {success_rate:.2}')
-    #     print(f'Average Score = {average_score}')

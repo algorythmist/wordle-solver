@@ -34,27 +34,18 @@ class WordleTestCase(unittest.TestCase):
         self.assertEqual(secret_word, guess)
 
     def test_solver_accuracy(self):
-        five_letter_words = read_dictionary()
-        trials = 1000
-        successes = 0
-        total_score = 0
-        for i in range(trials):
-            secret_word = random_word(five_letter_words)
-            scorer = Scorer(secret_word)
-            # TODO: pass solver as param
-            guesses = BruteForceSolver(scorer).solve(five_letter_words)
-
-            guess = guesses[-1]
-            if guess == secret_word:
-                successes += 1
-                total_score += len(guesses)
-
-        success_rate = float(successes) / trials
-        average_score = float(total_score) / successes
+        success_rate, average_score = evaluate_solver('wordle_dict.txt', 1000,
+                                                      lambda scorer: BruteForceSolver(scorer))
         print(f'\nSuccess rate = {success_rate:.2}')
         self.assertTrue(success_rate >= 0.98)
         print(f'Average Score = {average_score}')
         self.assertTrue(average_score < 4)
+
+    def test_solver_accuracy_large_dict(self):
+        success_rate, average_score = evaluate_solver('words_alpha.txt', 1000,
+                                                      lambda scorer: BruteForceSolver(scorer))
+        print(f'\nSuccess rate = {success_rate:.2}')
+        print(f'Average Score = {average_score}')
 
     def test_solver_repeated_letter(self):
         five_letter_words = read_dictionary()

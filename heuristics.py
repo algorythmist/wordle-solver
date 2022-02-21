@@ -1,5 +1,5 @@
 from wordle_solver import WordleSolver, random_word, Scorer, filter_dictionary
-
+import random
 
 def evaluate_guess(guess, current_dictionary):
     """
@@ -20,10 +20,13 @@ def evaluate_guess(guess, current_dictionary):
     return float(new_length) / len(current_dictionary)
 
 
-def find_best_word(dictionary, evaluate_fn):
+def find_best_word(dictionary, evaluate_fn, max_sample_size):
     min_penalty = 1000000
     best_word = None
-    for word in dictionary:
+    word_sample = dictionary
+    if max_sample_size is not None and len(dictionary) > max_sample_size:
+        word_sample = random.sample(dictionary, max_sample_size)
+    for word in word_sample:
         penalty = evaluate_fn(word, dictionary)
         if penalty < min_penalty:
             min_penalty = penalty
@@ -33,16 +36,20 @@ def find_best_word(dictionary, evaluate_fn):
 
 class OneStepLookaheadSolver(WordleSolver):
 
-    def __init__(self, scorer: Scorer, evaluate_fn=evaluate_guess, threshold=200):
+    def __init__(self, scorer: Scorer,
+                 evaluate_fn=evaluate_guess,
+                 threshold=200,
+                 max_sample_size=None):
         super(OneStepLookaheadSolver, self).__init__(scorer)
         self.evaluate_fn = evaluate_fn
         self.threshold = threshold
+        self.max_sample_size = max_sample_size
 
     def guess_next_word(self, words_remaining, trial):
         if trial == 0:
             return 'CRANE'
         if len(words_remaining) < self.threshold:
-            return find_best_word(words_remaining, self.evaluate_fn)
+            return find_best_word(words_remaining, self.evaluate_fn, self.max_sample_size)
         return random_word(words_remaining)
 
 
