@@ -1,9 +1,7 @@
 import random
 from collections import Counter
-from math import sqrt
-from typing import Callable
 
-from wordle.dictionary import read_dictionary, filter_dictionary
+from wordle.dictionary import filter_dictionary
 from wordle.wordle_scorer import Scorer
 
 
@@ -74,29 +72,3 @@ def initial_guesses(dictionary):
     :return:
     """
     return {word for word in dictionary if all_letters_are_distinct(word) and has_vowels(word, 3)}
-
-
-def evaluate_solver(dictionary_filename: str,
-                    trials: str,
-                    solver_factory: Callable[[Scorer], WordleSolver]):
-    five_letter_words = read_dictionary(dictionary_filename)
-    successes = 0
-    total_score = 0
-    sum_of_squares = 0
-    for i in range(trials):
-        secret_word = random_word(five_letter_words)
-        scorer = Scorer(secret_word)
-        solver = solver_factory(scorer)
-        guesses = solver.solve(five_letter_words)
-
-        guess = guesses[-1]
-        if guess == secret_word:
-            successes += 1
-            score = len(guesses)
-            total_score += score
-            sum_of_squares += score * score
-
-    success_rate = float(successes) / trials
-    average_score = float(total_score) / successes
-    variance = (sum_of_squares / successes) - average_score * average_score
-    return success_rate, average_score, sqrt(variance)

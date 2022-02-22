@@ -1,6 +1,8 @@
 import unittest
 
 from wordle.wordle_solver import *
+from wordle.dictionary import read_dictionary
+from wordle.performace_evaluator import evaluate_solver
 
 
 class SolverTestCase(unittest.TestCase):

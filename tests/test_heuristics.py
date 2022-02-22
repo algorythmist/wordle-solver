@@ -2,7 +2,7 @@ import unittest
 
 from wordle.heuristics import OneStepLookaheadSolver, evaluate_guess
 from wordle.wordle_solver import *
-
+from wordle.dictionary import read_dictionary
 
 class HeuristicsTestCase(unittest.TestCase):
 

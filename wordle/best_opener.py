@@ -1,7 +1,8 @@
 import multiprocessing as mp
 
 from wordle.dictionary import read_dictionary
-from wordle.wordle_solver import evaluate_solver, NaiveSolver
+from wordle.performace_evaluator import evaluate_solver
+from wordle.wordle_solver import NaiveSolver
 
 
 def find_best_openers():
