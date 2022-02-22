@@ -1,7 +1,11 @@
 import random
 from collections import Counter
+from math import sqrt
+from typing import Callable
+
 from wordle.dictionary import read_dictionary, filter_dictionary
 from wordle.wordle_scorer import Scorer
+
 
 class WordleSolver:
 
@@ -9,6 +13,12 @@ class WordleSolver:
         self.scorer = scorer
 
     def guess_next_word(self, words_remaining, trial):
+        """
+        Generate a guess given the current dictionary
+        :param words_remaining: the current dictionary of valid words
+        :param trial: the trial number
+        :return: a word from the current dictionary
+        """
         pass
 
     def solve(self, dictionary):
@@ -18,17 +28,16 @@ class WordleSolver:
             guess = self.guess_next_word(words_remaining, i)
             guesses.append(guess)
             score = self.scorer.score(guess)
-            #TODO print(guess, score)
             if self.scorer.is_solved(guess):
                 break
             words_remaining = filter_dictionary(words_remaining, score)
         return guesses
 
 
-class BruteForceSolver(WordleSolver):
+class NaiveSolver(WordleSolver):
 
     def __init__(self, scorer: Scorer, opener='SLATE'):
-        super(BruteForceSolver, self).__init__(scorer)
+        super(NaiveSolver, self).__init__(scorer)
         self.opener = opener
 
     def guess_next_word(self, words_remaining, trial):
@@ -67,12 +76,13 @@ def initial_guesses(dictionary):
     return {word for word in dictionary if all_letters_are_distinct(word) and has_vowels(word, 3)}
 
 
-def evaluate_solver(dictionary_filename,
-                    trials,
-                    solver_factory):
+def evaluate_solver(dictionary_filename: str,
+                    trials: str,
+                    solver_factory: Callable[[Scorer], WordleSolver]):
     five_letter_words = read_dictionary(dictionary_filename)
     successes = 0
     total_score = 0
+    sum_of_squares = 0
     for i in range(trials):
         secret_word = random_word(five_letter_words)
         scorer = Scorer(secret_word)
@@ -82,9 +92,11 @@ def evaluate_solver(dictionary_filename,
         guess = guesses[-1]
         if guess == secret_word:
             successes += 1
-            total_score += len(guesses)
+            score = len(guesses)
+            total_score += score
+            sum_of_squares += score * score
 
     success_rate = float(successes) / trials
     average_score = float(total_score) / successes
-    return success_rate, average_score
-
+    variance = (sum_of_squares / successes) - average_score * average_score
+    return success_rate, average_score, sqrt(variance)

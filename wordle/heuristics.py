@@ -1,6 +1,7 @@
 from wordle.wordle_solver import WordleSolver, random_word, Scorer, filter_dictionary
 import random
 
+
 def evaluate_guess(guess, current_dictionary):
     """
     Compute the average length of the new dictionary given a guess
@@ -12,7 +13,6 @@ def evaluate_guess(guess, current_dictionary):
     for word in current_dictionary:
         if word == guess:
             continue
-        # TODO: resolve ties
         scorer = Scorer(word)
         score = scorer.score(guess)
         new_dict = filter_dictionary(current_dictionary, score)
@@ -20,6 +20,7 @@ def evaluate_guess(guess, current_dictionary):
     return float(new_length) / len(current_dictionary)
 
 
+# TODO: resolve ties
 def find_best_word(dictionary, evaluate_fn, max_sample_size):
     min_penalty = 1000000
     best_word = None

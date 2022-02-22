@@ -1,9 +1,9 @@
 import unittest
+
 from wordle.wordle_solver import *
-from wordle.dictionary import read_dictionary
 
 
-class WordleTestCase(unittest.TestCase):
+class SolverTestCase(unittest.TestCase):
 
     def test_all_letters_are_distinct(self):
         self.assertTrue(all_letters_are_distinct('abcd'))
@@ -25,7 +25,7 @@ class WordleTestCase(unittest.TestCase):
         five_letter_words = read_dictionary()
         secret_word = 'TEPID'
         scorer = Scorer(secret_word)
-        solver = BruteForceSolver(scorer)
+        solver = NaiveSolver(scorer)
         guesses = solver.solve(five_letter_words)
         guess = guesses[-1]
         self.assertEqual('TEPID', guess)
@@ -34,24 +34,28 @@ class WordleTestCase(unittest.TestCase):
         self.assertEqual(secret_word, guess)
 
     def test_solver_accuracy(self):
-        success_rate, average_score = evaluate_solver('../data/wordle_dict.txt', 1000,
-                                                      lambda scorer: BruteForceSolver(scorer))
+        success_rate, average_score, stdev = evaluate_solver('wordle_dict.txt', 1000,
+                                                             lambda scorer: NaiveSolver(scorer))
         print(f'\nSuccess rate = {success_rate:.2}')
-        self.assertTrue(success_rate >= 0.98)
         print(f'Average Score = {average_score}')
+        print(f'Standard deviation = {stdev}')
+        self.assertTrue(success_rate >= 0.98)
         self.assertTrue(average_score < 4)
 
-    def test_solver_accuracy_large_dict(self):
-        success_rate, average_score = evaluate_solver('../data/words_alpha.txt', 1000,
-                                                      lambda scorer: BruteForceSolver(scorer))
+    def test_solver_accuracy_large_dictionary(self):
+        success_rate, average_score, stdev = evaluate_solver('full_dict.txt', 1000,
+                                                             lambda scorer: NaiveSolver(scorer))
         print(f'\nSuccess rate = {success_rate:.2}')
         print(f'Average Score = {average_score}')
+        print(f'Standard deviation = {stdev}')
+        self.assertTrue(success_rate >= 0.84)
+        self.assertTrue(average_score < 5)
 
     def test_solver_repeated_letter(self):
         five_letter_words = read_dictionary()
         secret_word = 'GASSY'
         scorer = Scorer(secret_word)
-        guesses = BruteForceSolver(scorer).solve(five_letter_words)
+        guesses = NaiveSolver(scorer).solve(five_letter_words)
         guess = guesses[-1]
         self.assertEqual(secret_word, guess)
         iterations = len(guesses)

@@ -1,12 +1,7 @@
 import multiprocessing as mp
-from wordle.dictionary import read_dictionary
-from wordle.wordle_solver import evaluate_solver, BruteForceSolver
 
-def evaluate_opener(opener: str):
-    success_rate, average_score = evaluate_solver('../data/wordle_dict.txt', 500,
-                                                  lambda scorer: BruteForceSolver(scorer=scorer,
-                                                                                  opener=opener))
-    return opener, average_score, success_rate
+from wordle.dictionary import read_dictionary
+from wordle.wordle_solver import evaluate_solver, NaiveSolver
 
 
 def find_best_openers():
@@ -14,6 +9,15 @@ def find_best_openers():
     Read the entire dictionary and simulate every opening.
     Retain only the words that score below 4 and store them
     """
+
+    def evaluate_opener(opener: str):
+        success_rate, average_score = \
+            evaluate_solver(dictionary_filename='wordle_dict.txt',
+                            trials=1000,
+                            solver_factory=lambda scorer: NaiveSolver(scorer=scorer,
+                                                                      opener=opener))
+        return opener, average_score, success_rate
+
     openers = read_dictionary()
 
     with mp.get_context("spawn").Pool(16) as pool:
@@ -23,10 +27,9 @@ def find_best_openers():
     results = sorted(results, key=lambda x: x[1])
     results = [f'{result[0]},{result[1]},{result[2]}\n' for result in results]
 
-    with open("../data/best_openers.txt", "w") as f:
+    with open("best_openers.txt", "w") as f:
         f.writelines(results)
 
 
 if __name__ == '__main__':
-
     find_best_openers()
