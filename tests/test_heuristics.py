@@ -3,6 +3,8 @@ import unittest
 from wordle.heuristics import OneStepLookaheadSolver, evaluate_guess
 from wordle.wordle_solver import *
 from wordle.dictionary import read_dictionary
+from wordle.performace_evaluator import evaluate_solver
+from wordle.wordle_scorer import LookupScorer
 
 class HeuristicsTestCase(unittest.TestCase):
 
@@ -35,3 +37,4 @@ class HeuristicsTestCase(unittest.TestCase):
         iterations = len(guesses)
         print(f'Found the solution {guess} in {iterations} iterations')
         self.assertEqual(secret_word, guess)
+

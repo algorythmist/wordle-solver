@@ -36,6 +36,7 @@ class Scorer:
         -1: Letter is not in the word
         0: The letter is in the word but at a different place
         1: The letter is at the right place
+        :param secret: The secret word
         :param guess: The guess
         :return: A list of pairs of letters to score values
         """
@@ -44,9 +45,8 @@ class Scorer:
 
 class LookupScorer(Scorer):
 
-    def __init__(self, filename: str):
+    def __init__(self, filename: str = '../data/wordle_scores.pkl'):
         self.lookup = pickle.load(open(filename, 'rb'))
 
     def score(self, secret: str, guess: str):
         return self.lookup[secret][guess]
-

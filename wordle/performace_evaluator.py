@@ -10,6 +10,7 @@ from wordle.wordle_solver import WordleSolver, random_word, play_wordle
 def evaluate_solver(dictionary_filename: str,
                     trials: str,
                     solver_factory: Callable[[Scorer], WordleSolver],
+                    scorer=Scorer(),
                     store_failures: str = None):
     five_letter_words = read_dictionary(dictionary_filename)
     successes = 0
@@ -18,9 +19,8 @@ def evaluate_solver(dictionary_filename: str,
     failures = []
     for i in range(trials):
         secret_word = random_word(five_letter_words)
-        scorer = Scorer()
         solver = solver_factory(scorer)
-        guesses = play_wordle(five_letter_words, secret_word, solver)
+        guesses = play_wordle(five_letter_words, secret_word, solver, scorer)
 
         guess = guesses[-1]
         if guess == secret_word:
@@ -42,38 +42,37 @@ def evaluate_solver(dictionary_filename: str,
 
 
 def heuristic_solver_accuracy():
-    trials = 100
+    trials = 500
     success_rate, average_score, stdev = evaluate_solver('wordle_dict.txt', trials,
-                                                         lambda scorer: OneStepLookaheadSolver(scorer),
-                                                         store_failures='failures.txt')
+                                                         lambda scorer: OneStepLookaheadSolver(scorer,
+                                                                                               threshold=1000),
+                                                         store_failures='onestep-failures-small.txt')
     print(f'\nSuccess rate = {success_rate:.2}')
     print(f'Average Score = {average_score}')
     print(f'Standard deviation = {stdev}')
 
 
 def solver_accuracy_large_dict():
-    trials = 50
+    trials = 200
     success_rate, average_score, stdev = evaluate_solver('full_dict.txt', trials,
                                                          lambda scorer: OneStepLookaheadSolver(scorer,
-                                                                                               threshold=300,
-                                                                                               max_sample_size=1000))
+                                                                                               threshold=400,
+                                                                                               max_sample_size=1000),
+                                                         store_failures='onestep-failures-full.txt')
     print(f'\nSuccess rate = {success_rate:.2}')
     print(f'Average Score = {average_score}')
     print(f'Standard deviation = {stdev}')
 
 
 if __name__ == '__main__':
-    pass
+
     #heuristic_solver_accuracy()
     # Success rate = 0.99
     # Average Score = 3.524193548387097
     # Standard deviation = 0.7455644070901363
 
-    #solver_accuracy_large_dict()
-    # Success rate = 0.93
+    solver_accuracy_large_dict()
+    # Success rate = 0.96
     # Average Score = 4.41036717062635
     # Standard deviation = 0.9524666596558226
 
-    # Success rate = 0.93
-    # Average Score = 4.398286937901499
-    # Standard deviation = 0.8754547665571433
