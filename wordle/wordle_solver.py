@@ -7,9 +7,6 @@ from wordle.wordle_scorer import Scorer
 
 class WordleSolver:
 
-    def __init__(self, scorer: Scorer):
-        self.scorer = scorer
-
     def guess_next_word(self, words_remaining, trial):
         """
         Generate a guess given the current dictionary
@@ -21,13 +18,13 @@ class WordleSolver:
 
 
 def play_wordle(dictionary, secret, solver: WordleSolver):
-    scorer = Scorer(secret)
+    scorer = Scorer()
     guesses = []
     words_remaining = dictionary
     for i in range(6):
         guess = solver.guess_next_word(words_remaining, i)
         guesses.append(guess)
-        score = scorer.score(guess)
+        score = scorer.score(secret, guess)
         if secret == guess:
             break
         words_remaining = filter_dictionary(words_remaining, score)
@@ -36,8 +33,7 @@ def play_wordle(dictionary, secret, solver: WordleSolver):
 
 class NaiveSolver(WordleSolver):
 
-    def __init__(self, scorer: Scorer, opener='SLATE'):
-        super(NaiveSolver, self).__init__(scorer)
+    def __init__(self, opener='SLATE'):
         self.opener = opener
 
     def guess_next_word(self, words_remaining, trial):

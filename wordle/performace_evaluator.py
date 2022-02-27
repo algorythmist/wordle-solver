@@ -18,7 +18,7 @@ def evaluate_solver(dictionary_filename: str,
     failures = []
     for i in range(trials):
         secret_word = random_word(five_letter_words)
-        scorer = Scorer(secret_word)
+        scorer = Scorer()
         solver = solver_factory(scorer)
         guesses = play_wordle(five_letter_words, secret_word, solver)
 

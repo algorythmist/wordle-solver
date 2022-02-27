@@ -17,7 +17,7 @@ class HeuristicsTestCase(unittest.TestCase):
     def test_lookahead_solver(self):
         five_letter_words = read_dictionary('full_dict.txt')
         secret_word = 'TEPID'
-        scorer = Scorer(secret_word)
+        scorer = Scorer()
         solver = OneStepLookaheadSolver(scorer)
         guesses = play_wordle(five_letter_words, secret_word, solver)
         guess = guesses[-1]
@@ -29,8 +29,7 @@ class HeuristicsTestCase(unittest.TestCase):
     def test_solver_repeated_letter(self):
         five_letter_words = read_dictionary()
         secret_word = 'GASSY'
-        scorer = Scorer(secret_word)
-        guesses = play_wordle(five_letter_words, secret_word, NaiveSolver(scorer))
+        guesses = play_wordle(five_letter_words, secret_word, NaiveSolver())
         guess = guesses[-1]
         self.assertEqual(secret_word, guess)
         iterations = len(guesses)

@@ -26,8 +26,7 @@ class SolverTestCase(unittest.TestCase):
     def test_brute_force_solver(self):
         five_letter_words = read_dictionary()
         secret_word = 'TEPID'
-        scorer = Scorer(secret_word)
-        solver = NaiveSolver(scorer)
+        solver = NaiveSolver()
         guesses = play_wordle(five_letter_words, secret_word, solver)
         guess = guesses[-1]
         self.assertEqual('TEPID', guess)
@@ -37,7 +36,7 @@ class SolverTestCase(unittest.TestCase):
 
     def test_solver_accuracy(self):
         success_rate, average_score, stdev = evaluate_solver('wordle_dict.txt', 1000,
-                                                             lambda scorer: NaiveSolver(scorer))
+                                                             lambda scorer: NaiveSolver())
         print(f'\nSuccess rate = {success_rate:.2}')
         print(f'Average Score = {average_score}')
         print(f'Standard deviation = {stdev}')
@@ -46,7 +45,7 @@ class SolverTestCase(unittest.TestCase):
 
     def test_solver_accuracy_large_dictionary(self):
         success_rate, average_score, stdev = evaluate_solver('full_dict.txt', 1000,
-                                                             lambda scorer: NaiveSolver(scorer))
+                                                             lambda scorer: NaiveSolver())
         print(f'\nSuccess rate = {success_rate:.2}')
         print(f'Average Score = {average_score}')
         print(f'Standard deviation = {stdev}')
@@ -56,8 +55,7 @@ class SolverTestCase(unittest.TestCase):
     def test_solver_repeated_letter(self):
         five_letter_words = read_dictionary()
         secret_word = 'GASSY'
-        scorer = Scorer(secret_word)
-        solver = NaiveSolver(scorer)
+        solver = NaiveSolver()
         guesses = play_wordle(five_letter_words, secret_word, solver)
         guess = guesses[-1]
         self.assertEqual(secret_word, guess)

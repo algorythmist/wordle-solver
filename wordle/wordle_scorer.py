@@ -12,10 +12,16 @@ def score_guess(secret: str, guess: str):
 
 
 def score_secret(dictionary, secret):
+    """
+    Create a score for this secret and every word on the dictionary
+    """
     return {guess: score_guess(secret, guess) for guess in dictionary}
 
 
 def score_all(dictionary, filename):
+    """
+    Create a score lookup for all secret/guess scores and store in a file
+    """
     lookup = {secret: score_secret(dictionary, secret) for secret in dictionary}
     pickle.dump(lookup, open(filename, "wb"))
     return lookup
@@ -23,10 +29,7 @@ def score_all(dictionary, filename):
 
 class Scorer:
 
-    def __init__(self, secret: str):
-        self.secret = secret
-
-    def score(self, guess: str):
+    def score(self, secret: str, guess: str):
         """
         Score a guess against the actual word
         The score codes mean
@@ -36,7 +39,7 @@ class Scorer:
         :param guess: The guess
         :return: A list of pairs of letters to score values
         """
-        return score_guess(self.secret, guess)
+        return score_guess(secret, guess)
 
     def is_solved(self, word):
         return self.secret == word

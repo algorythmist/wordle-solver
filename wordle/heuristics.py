@@ -10,11 +10,11 @@ def evaluate_guess(guess, current_dictionary):
     :return:
     """
     new_length = 0
-    for word in current_dictionary:
-        if word == guess:
+    for secret in current_dictionary:
+        if secret == guess:
             continue
-        scorer = Scorer(word)
-        score = scorer.score(guess)
+        scorer = Scorer()
+        score = scorer.score(secret, guess)
         new_dict = filter_dictionary(current_dictionary, score)
         new_length += len(new_dict)
     return float(new_length) / len(current_dictionary)
@@ -41,7 +41,7 @@ class OneStepLookaheadSolver(WordleSolver):
                  evaluate_fn=evaluate_guess,
                  threshold=200,
                  max_sample_size=None):
-        super(OneStepLookaheadSolver, self).__init__(scorer)
+        self.scorer = scorer
         self.evaluate_fn = evaluate_fn
         self.threshold = threshold
         self.max_sample_size = max_sample_size

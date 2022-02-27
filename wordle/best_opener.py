@@ -15,8 +15,7 @@ def find_best_openers():
         success_rate, average_score = \
             evaluate_solver(dictionary_filename='wordle_dict.txt',
                             trials=1000,
-                            solver_factory=lambda scorer: NaiveSolver(scorer=scorer,
-                                                                      opener=opener))
+                            solver_factory=lambda scorer: NaiveSolver(opener=opener))
         return opener, average_score, success_rate
 
     openers = read_dictionary()
