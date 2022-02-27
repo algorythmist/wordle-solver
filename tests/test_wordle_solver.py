@@ -28,7 +28,7 @@ class SolverTestCase(unittest.TestCase):
         secret_word = 'TEPID'
         scorer = Scorer(secret_word)
         solver = NaiveSolver(scorer)
-        guesses = solver.solve(five_letter_words)
+        guesses = play_wordle(five_letter_words, secret_word, solver)
         guess = guesses[-1]
         self.assertEqual('TEPID', guess)
         iterations = len(guesses)
@@ -57,7 +57,8 @@ class SolverTestCase(unittest.TestCase):
         five_letter_words = read_dictionary()
         secret_word = 'GASSY'
         scorer = Scorer(secret_word)
-        guesses = NaiveSolver(scorer).solve(five_letter_words)
+        solver = NaiveSolver(scorer)
+        guesses = play_wordle(five_letter_words, secret_word, solver)
         guess = guesses[-1]
         self.assertEqual(secret_word, guess)
         iterations = len(guesses)

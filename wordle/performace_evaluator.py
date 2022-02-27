@@ -4,7 +4,7 @@ from typing import Callable
 from wordle.dictionary import read_dictionary
 from wordle.heuristics import OneStepLookaheadSolver
 from wordle.wordle_scorer import Scorer
-from wordle.wordle_solver import WordleSolver, random_word
+from wordle.wordle_solver import WordleSolver, random_word, play_wordle
 
 
 def evaluate_solver(dictionary_filename: str,
@@ -20,7 +20,7 @@ def evaluate_solver(dictionary_filename: str,
         secret_word = random_word(five_letter_words)
         scorer = Scorer(secret_word)
         solver = solver_factory(scorer)
-        guesses = solver.solve(five_letter_words)
+        guesses = play_wordle(five_letter_words, secret_word, solver)
 
         guess = guesses[-1]
         if guess == secret_word:
@@ -63,12 +63,13 @@ def solver_accuracy_large_dict():
 
 
 if __name__ == '__main__':
+    pass
     #heuristic_solver_accuracy()
     # Success rate = 0.99
     # Average Score = 3.524193548387097
     # Standard deviation = 0.7455644070901363
 
-    solver_accuracy_large_dict()
+    #solver_accuracy_large_dict()
     # Success rate = 0.93
     # Average Score = 4.41036717062635
     # Standard deviation = 0.9524666596558226

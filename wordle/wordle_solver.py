@@ -19,17 +19,19 @@ class WordleSolver:
         """
         pass
 
-    def solve(self, dictionary):
-        guesses = []
-        words_remaining = dictionary
-        for i in range(6):
-            guess = self.guess_next_word(words_remaining, i)
-            guesses.append(guess)
-            score = self.scorer.score(guess)
-            if self.scorer.is_solved(guess):
-                break
-            words_remaining = filter_dictionary(words_remaining, score)
-        return guesses
+
+def play_wordle(dictionary, secret, solver: WordleSolver):
+    scorer = Scorer(secret)
+    guesses = []
+    words_remaining = dictionary
+    for i in range(6):
+        guess = solver.guess_next_word(words_remaining, i)
+        guesses.append(guess)
+        score = scorer.score(guess)
+        if secret == guess:
+            break
+        words_remaining = filter_dictionary(words_remaining, score)
+    return guesses
 
 
 class NaiveSolver(WordleSolver):
