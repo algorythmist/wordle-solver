@@ -17,8 +17,8 @@ class WordleSolver:
         pass
 
 
-def play_wordle(dictionary, secret, solver: WordleSolver):
-    scorer = Scorer()
+def play_wordle(dictionary, secret, solver: WordleSolver, scorer: Scorer = Scorer()):
+
     guesses = []
     words_remaining = dictionary
     for i in range(6):

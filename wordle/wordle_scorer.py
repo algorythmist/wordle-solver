@@ -41,11 +41,8 @@ class Scorer:
         """
         return score_guess(secret, guess)
 
-    def is_solved(self, word):
-        return self.secret == word
 
-
-class MemoryScorer:
+class LookupScorer(Scorer):
 
     def __init__(self, filename: str):
         self.lookup = pickle.load(open(filename, 'rb'))
@@ -53,5 +50,3 @@ class MemoryScorer:
     def score(self, secret: str, guess: str):
         return self.lookup[secret][guess]
 
-    def is_solved(self, word):
-        return self.secret == word

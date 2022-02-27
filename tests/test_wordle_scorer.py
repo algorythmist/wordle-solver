@@ -10,7 +10,7 @@ class ScorerTestCase(unittest.TestCase):
         score = scorer.score('AVAIL', 'ALTIN')
         self.assertEquals([('A', 1), ('L', 0), ('T', -1), ('I', 1), ('N', -1)], score)
 
-    def test_memory(self):
-        scorer = MemoryScorer('../data/wordle_scores.pkl')
-        score = scorer.score('AVAIL', 'ALIVE')
-        print(score)
+    # def test_lookup(self):
+    #     scorer = LookupScorer('../data/wordle_scores.pkl')
+    #     score = scorer.score('AVAIL', 'ALIVE')
+    #     print(score)
